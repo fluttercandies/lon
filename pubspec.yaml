@@ -1,6 +1,6 @@
 name: lon
 description: Compact, canonical, lossless JSON codec for AI-first data exchange with self-describing record tables.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/fluttercandies/lon
 repository: https://github.com/fluttercandies/lon
 issue_tracker: https://github.com/fluttercandies/lon/issues
