@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add 20,000-case multi-seed structural property tests, exact ordinary-container depth boundaries, dynamic value and record-shape matrices, duplicate-key records, deterministic LON mutations, and exhaustive complex-container truncations.
+
 ## 1.0.0 - 2026-08-02
 
 - Publish the canonical Language Object Notation v1 format and Dart codec.
