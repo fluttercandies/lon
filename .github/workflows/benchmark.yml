@@ -1,0 +1,48 @@
+name: Benchmark
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: Token efficiency
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Resolve Dart dependencies
+        run: dart pub get
+
+      - name: Install benchmark dependencies
+        working-directory: benchmark
+        run: bun install --frozen-lockfile
+
+      - name: Run benchmark
+        working-directory: benchmark
+        run: bun run benchmark
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lon-token-efficiency-${{ github.sha }}
+          path: |
+            benchmark/results/token-efficiency.json
+            benchmark/results/token-efficiency.md
+          if-no-files-found: error
+          retention-days: 30

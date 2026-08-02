@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">LON mark</title>
+  <desc id="desc">A bracketed compact data table representing lossless structured compression.</desc>
+  <defs>
+    <linearGradient id="background" x1="32" y1="24" x2="480" y2="488" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111F"/>
+      <stop offset="1" stop-color="#13182F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="116" y1="108" x2="396" y2="404" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE"/>
+      <stop offset="0.5" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#F472B6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(160 120) rotate(48) scale(360)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="16" y="16" width="480" height="480" rx="128" fill="url(#background)"/>
+  <rect x="16" y="16" width="480" height="480" rx="128" fill="url(#glow)"/>
+  <rect x="19" y="19" width="474" height="474" rx="125" stroke="url(#accent)" stroke-width="6"/>
+
+  <path d="M210 142H174C156.327 142 142 156.327 142 174V338C142 355.673 156.327 370 174 370H210" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M302 142H338C355.673 142 370 156.327 370 174V338C370 355.673 355.673 370 338 370H302" stroke="#F8FAFC" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g filter="url(#softGlow)" stroke="url(#accent)" stroke-linecap="round">
+    <path d="M230 198H318" stroke-width="20"/>
+    <path d="M230 256H298" stroke-width="20"/>
+    <path d="M230 314H330" stroke-width="20"/>
+  </g>
+  <path d="M216 226H334" stroke="#64748B" stroke-opacity="0.75" stroke-width="4"/>
+  <circle cx="214" cy="198" r="10" fill="#67E8F9"/>
+  <circle cx="214" cy="256" r="10" fill="#A78BFA"/>
+  <circle cx="214" cy="314" r="10" fill="#F9A8D4"/>
+</svg>

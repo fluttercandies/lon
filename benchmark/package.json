@@ -1,0 +1,13 @@
+{
+  "name": "lon-token-efficiency-benchmark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "bun token_efficiency.mjs"
+  },
+  "dependencies": {
+    "@toon-format/toon": "4.1.0",
+    "gpt-tokenizer": "3.4.0",
+    "yaml": "2.9.0"
+  }
+}

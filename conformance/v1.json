@@ -1,0 +1,122 @@
+[
+  {
+    "name": "null root",
+    "json": "null",
+    "lon": "null",
+    "canonicalJson": "null"
+  },
+  {
+    "name": "flat object",
+    "json": "{\"name\":\"Ada\",\"age\":37,\"active\":true}",
+    "lon": "{name:Ada age:37 active:true}",
+    "canonicalJson": "{\"name\":\"Ada\",\"age\":37,\"active\":true}"
+  },
+  {
+    "name": "primitive array and numeric string",
+    "json": "[\"Ada\",\"Bob\",\"01\",null,false]",
+    "lon": "[Ada,Bob,\"01\",null,false]",
+    "canonicalJson": "[\"Ada\",\"Bob\",\"01\",null,false]"
+  },
+  {
+    "name": "nested and empty containers",
+    "json": "{\"matrix\":[[1,2],[3,4]],\"empty\":{},\"list\":[]}",
+    "lon": "{matrix:[[1,2],[3,4]] empty:{} list:[]}",
+    "canonicalJson": "{\"matrix\":[[1,2],[3,4]],\"empty\":{},\"list\":[]}"
+  },
+  {
+    "name": "recursive record table with array cells",
+    "json": "{\"users\":[{\"id\":1,\"name\":\"Ada\",\"addr\":{\"city\":\"London\",\"zip\":\"W1\"},\"tags\":[\"math\",\"first\"]},{\"id\":2,\"name\":\"Bob\",\"addr\":{\"city\":\"Paris\",\"zip\":\"75001\"},\"tags\":[]}]}",
+    "lon": "{users:[id name addr{city zip} tags;1 Ada London W1 [math first];2 Bob Paris \"75001\" []]}",
+    "canonicalJson": "{\"users\":[{\"id\":1,\"name\":\"Ada\",\"addr\":{\"city\":\"London\",\"zip\":\"W1\"},\"tags\":[\"math\",\"first\"]},{\"id\":2,\"name\":\"Bob\",\"addr\":{\"city\":\"Paris\",\"zip\":\"75001\"},\"tags\":[]}]}"
+  },
+  {
+    "name": "uniform keyed object stays explicit",
+    "json": "{\"production\":{\"region\":\"eu-central-1\",\"replicas\":6,\"debug\":false},\"staging\":{\"region\":\"eu-central-1\",\"replicas\":2,\"debug\":true}}",
+    "lon": "{production:{region:eu-central-1 replicas:6 debug:false} staging:{region:eu-central-1 replicas:2 debug:true}}",
+    "canonicalJson": "{\"production\":{\"region\":\"eu-central-1\",\"replicas\":6,\"debug\":false},\"staging\":{\"region\":\"eu-central-1\",\"replicas\":2,\"debug\":true}}"
+  },
+  {
+    "name": "non-uniform fallback",
+    "json": "[{\"a\":1},{\"b\":2}]",
+    "lon": "[{a:1},{b:2}]",
+    "canonicalJson": "[{\"a\":1},{\"b\":2}]"
+  },
+  {
+    "name": "one-field records stay explicit",
+    "json": "[{\"a\":1},{\"a\":2}]",
+    "lon": "[{a:1},{a:2}]",
+    "canonicalJson": "[{\"a\":1},{\"a\":2}]"
+  },
+  {
+    "name": "compact two-field record table",
+    "json": "[{\"a\":1,\"b\":2},{\"a\":3,\"b\":4}]",
+    "lon": "[a b;1 2;3 4]",
+    "canonicalJson": "[{\"a\":1,\"b\":2},{\"a\":3,\"b\":4}]"
+  },
+  {
+    "name": "UTF-8 table cost gate",
+    "json": "[{\"简\":1,\"体\":2},{\"简\":3,\"体\":4}]",
+    "lon": "[简 体;1 2;3 4]",
+    "canonicalJson": "[{\"简\":1,\"体\":2},{\"简\":3,\"体\":4}]"
+  },
+  {
+    "name": "small keyed records stay ordinary",
+    "json": "{\"a\":{\"x\":1},\"b\":{\"x\":2}}",
+    "lon": "{a:{x:1} b:{x:2}}",
+    "canonicalJson": "{\"a\":{\"x\":1},\"b\":{\"x\":2}}"
+  },
+  {
+    "name": "mixed scalars retain explicit commas",
+    "json": "[1,\"Ada\",true,null,\"Bob\"]",
+    "lon": "[1,Ada,true,null,Bob]",
+    "canonicalJson": "[1,\"Ada\",true,null,\"Bob\"]"
+  },
+  {
+    "name": "internal ASCII apostrophes",
+    "json": "{\"contraction\":\"don't\",\"name\":\"O'Reilly\",\"wrapped\":\"'quoted'\",\"trailing\":\"users'\"}",
+    "lon": "{contraction:don't name:O'Reilly wrapped:\"'quoted'\" trailing:\"users'\"}",
+    "canonicalJson": "{\"contraction\":\"don't\",\"name\":\"O'Reilly\",\"wrapped\":\"'quoted'\",\"trailing\":\"users'\"}"
+  },
+  {
+    "name": "ambiguous strings",
+    "json": "{\"null\":\"null\",\"number\":\"01\",\"empty\":\"\",\"space\":\"a b\",\"url\":\"https://x\",\"n\":-12.5e+2}",
+    "lon": "{null:\"null\" number:\"01\" empty:\"\" space:\"a b\" url:\"https://x\" n:-12.5e+2}",
+    "canonicalJson": "{\"null\":\"null\",\"number\":\"01\",\"empty\":\"\",\"space\":\"a b\",\"url\":\"https://x\",\"n\":-12.5e+2}"
+  },
+  {
+    "name": "duplicate keys and number lexemes",
+    "json": "{\"x\":1e+02,\"x\":-0,\"s\":\"\\u0041\"}",
+    "lon": "{x:1e+02 x:-0 s:A}",
+    "canonicalJson": "{\"x\":1e+02,\"x\":-0,\"s\":\"A\"}"
+  },
+  {
+    "name": "dynamic mixed containers",
+    "json": "[1,{\"a\":\"b\"},{\"a\":[1,{\"b\":\"c\"}]}]",
+    "lon": "[1,{a:b},{a:[1,{b:c}]}]",
+    "canonicalJson": "[1,{\"a\":\"b\"},{\"a\":[1,{\"b\":\"c\"}]}]"
+  },
+  {
+    "name": "dynamic object cells stay explicit",
+    "json": "[{\"id\":1,\"payload\":{\"a\":\"b\"}},{\"id\":2,\"payload\":{\"x\":[1,{\"b\":\"c\"}]}}]",
+    "lon": "[{id:1 payload:{a:b}},{id:2 payload:{x:[1,{b:c}]}}]",
+    "canonicalJson": "[{\"id\":1,\"payload\":{\"a\":\"b\"}},{\"id\":2,\"payload\":{\"x\":[1,{\"b\":\"c\"}]}}]"
+  },
+  {
+    "name": "JSON-adjacent string literals",
+    "json": "[\"NaN\",\"undefined\",\"Infinity\",\"-Infinity\",\"None\",\"nil\",\"yes\",\"no\",\"on\",\"off\",\".5\",\"1.\",\"1e\",\"0x10\",\"1_000\"]",
+    "lon": "[\"NaN\",\"undefined\",\"Infinity\",\"-Infinity\",\"None\",\"nil\",\"yes\",\"no\",\"on\",\"off\",\".5\",\"1.\",\"1e\",\"0x10\",\"1_000\"]",
+    "canonicalJson": "[\"NaN\",\"undefined\",\"Infinity\",\"-Infinity\",\"None\",\"nil\",\"yes\",\"no\",\"on\",\"off\",\".5\",\"1.\",\"1e\",\"0x10\",\"1_000\"]"
+  },
+  {
+    "name": "string whitespace controls and escapes",
+    "json": "{\"space\":\"a b\",\"tab\":\"a\\tb\",\"line\":\"a\\nb\",\"nul\":\"a\\u0000b\",\"quote\":\"a\\\"b\",\"slash\":\"a\\\\b\",\"emoji\":\"😀\"}",
+    "lon": "{space:\"a b\" tab:\"a\\tb\" line:\"a\\nb\" nul:\"a\\u0000b\" quote:\"a\\\"b\" slash:\"a\\\\b\" emoji:😀}",
+    "canonicalJson": "{\"space\":\"a b\",\"tab\":\"a\\tb\",\"line\":\"a\\nb\",\"nul\":\"a\\u0000b\",\"quote\":\"a\\\"b\",\"slash\":\"a\\\\b\",\"emoji\":\"😀\"}"
+  },
+  {
+    "name": "multilingual Unicode text",
+    "json": "[\"简体中文：你好，世界\",\"繁體中文：你好，世界\",\"日本語：こんにちは世界\",\"한국어: 안녕하세요 세계\",\"العربية: مرحبًا بالعالم\",\"עברית: שלום עולם\",\"فارسی: می‌روم\",\"हिन्दी: नमस्ते दुनिया\",\"বাংলা: নমস্কার বিশ্ব\",\"தமிழ்: வணக்கம் உலகம்\",\"ไทย: สวัสดีชาวโลก\",\"Tiếng Việt: Xin chào thế giới\",\"Русский: Привет, мир\",\"Ελληνικά: Γειά σου κόσμε\",\"é\",\"é\",\"👩‍💻\",\"🇨🇳\"]",
+    "lon": "[简体中文：你好，世界,繁體中文：你好，世界,日本語：こんにちは世界,\"한국어: 안녕하세요 세계\",\"العربية: مرحبًا بالعالم\",\"עברית: שלום עולם\",\"فارسی: می‌روم\",\"हिन्दी: नमस्ते दुनिया\",\"বাংলা: নমস্কার বিশ্ব\",\"தமிழ்: வணக்கம் உலகம்\",\"ไทย: สวัสดีชาวโลก\",\"Tiếng Việt: Xin chào thế giới\",\"Русский: Привет, мир\",\"Ελληνικά: Γειά σου κόσμε\",é,é,👩‍💻,🇨🇳]",
+    "canonicalJson": "[\"简体中文：你好，世界\",\"繁體中文：你好，世界\",\"日本語：こんにちは世界\",\"한국어: 안녕하세요 세계\",\"العربية: مرحبًا بالعالم\",\"עברית: שלום עולם\",\"فارسی: می‌روم\",\"हिन्दी: नमस्ते दुनिया\",\"বাংলা: নমস্কার বিশ্ব\",\"தமிழ்: வணக்கம் உலகம்\",\"ไทย: สวัสดีชาวโลก\",\"Tiếng Việt: Xin chào thế giới\",\"Русский: Привет, мир\",\"Ελληνικά: Γειά σου κόσμε\",\"é\",\"é\",\"👩‍💻\",\"🇨🇳\"]"
+  }
+]

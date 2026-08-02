@@ -1,0 +1,1609 @@
+{
+  "versions": {
+    "lon": "1.0.0",
+    "toon": "4.1.0",
+    "yaml": "2.9.0",
+    "tokenizer": "3.4.0",
+    "bun": "1.3.14",
+    "dart": "Dart SDK version: 3.12.0 (stable) (Fri May 8 01:51:14 2026 -0700) on \"macos_arm64\""
+  },
+  "methodology": {
+    "payloadOnly": true,
+    "comparisonBaseline": "lon",
+    "semanticRoundTripRequired": true,
+    "trailingLineBreakRemoved": true,
+    "tokenizers": [
+      "o200k_base",
+      "cl100k_base"
+    ],
+    "formats": [
+      "lon",
+      "json-compact",
+      "toon",
+      "yaml",
+      "json-pretty"
+    ]
+  },
+  "summary": {
+    "small": {
+      "cases": 14,
+      "inputJsonBytes": 548,
+      "formats": {
+        "lon": {
+          "bytes": 410,
+          "lines": 14,
+          "tokens": {
+            "o200k_base": 149,
+            "cl100k_base": 155
+          }
+        },
+        "json-compact": {
+          "bytes": 548,
+          "lines": 14,
+          "tokens": {
+            "o200k_base": 193,
+            "cl100k_base": 195
+          }
+        },
+        "toon": {
+          "bytes": 441,
+          "lines": 34,
+          "tokens": {
+            "o200k_base": 186,
+            "cl100k_base": 192
+          }
+        },
+        "yaml": {
+          "bytes": 496,
+          "lines": 47,
+          "tokens": {
+            "o200k_base": 202,
+            "cl100k_base": 208
+          }
+        },
+        "json-pretty": {
+          "bytes": 849,
+          "lines": 87,
+          "tokens": {
+            "o200k_base": 347,
+            "cl100k_base": 353
+          }
+        }
+      }
+    },
+    "medium": {
+      "cases": 8,
+      "inputJsonBytes": 16538,
+      "formats": {
+        "lon": {
+          "bytes": 11131,
+          "lines": 8,
+          "tokens": {
+            "o200k_base": 3964,
+            "cl100k_base": 3892
+          }
+        },
+        "json-compact": {
+          "bytes": 16538,
+          "lines": 8,
+          "tokens": {
+            "o200k_base": 5516,
+            "cl100k_base": 5361
+          }
+        },
+        "toon": {
+          "bytes": 12736,
+          "lines": 413,
+          "tokens": {
+            "o200k_base": 5119,
+            "cl100k_base": 5056
+          }
+        },
+        "yaml": {
+          "bytes": 19602,
+          "lines": 1145,
+          "tokens": {
+            "o200k_base": 7526,
+            "cl100k_base": 7445
+          }
+        },
+        "json-pretty": {
+          "bytes": 27405,
+          "lines": 1499,
+          "tokens": {
+            "o200k_base": 9146,
+            "cl100k_base": 9064
+          }
+        }
+      }
+    },
+    "large": {
+      "cases": 5,
+      "inputJsonBytes": 322616,
+      "formats": {
+        "lon": {
+          "bytes": 221651,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 79694,
+            "cl100k_base": 77192
+          }
+        },
+        "json-compact": {
+          "bytes": 322616,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 107636,
+            "cl100k_base": 103033
+          }
+        },
+        "toon": {
+          "bytes": 261292,
+          "lines": 10042,
+          "tokens": {
+            "o200k_base": 104247,
+            "cl100k_base": 102046
+          }
+        },
+        "yaml": {
+          "bytes": 360198,
+          "lines": 17564,
+          "tokens": {
+            "o200k_base": 134543,
+            "cl100k_base": 131843
+          }
+        },
+        "json-pretty": {
+          "bytes": 503845,
+          "lines": 23498,
+          "tokens": {
+            "o200k_base": 168891,
+            "cl100k_base": 166191
+          }
+        }
+      }
+    },
+    "all": {
+      "cases": 27,
+      "inputJsonBytes": 339702,
+      "formats": {
+        "lon": {
+          "bytes": 233192,
+          "lines": 27,
+          "tokens": {
+            "o200k_base": 83807,
+            "cl100k_base": 81239
+          }
+        },
+        "json-compact": {
+          "bytes": 339702,
+          "lines": 27,
+          "tokens": {
+            "o200k_base": 113345,
+            "cl100k_base": 108589
+          }
+        },
+        "toon": {
+          "bytes": 274469,
+          "lines": 10489,
+          "tokens": {
+            "o200k_base": 109552,
+            "cl100k_base": 107294
+          }
+        },
+        "yaml": {
+          "bytes": 380296,
+          "lines": 18756,
+          "tokens": {
+            "o200k_base": 142271,
+            "cl100k_base": 139496
+          }
+        },
+        "json-pretty": {
+          "bytes": 532099,
+          "lines": 25084,
+          "tokens": {
+            "o200k_base": 178384,
+            "cl100k_base": 175608
+          }
+        }
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "id": "null-root",
+      "size": "small",
+      "description": "Null root",
+      "inputJsonBytes": 4,
+      "metrics": {
+        "lon": {
+          "bytes": 4,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "json-compact": {
+          "bytes": 4,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "toon": {
+          "bytes": 4,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "yaml": {
+          "bytes": 4,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "json-pretty": {
+          "bytes": 4,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "null",
+        "lon": "null",
+        "toon": "null",
+        "yaml": "null",
+        "json-pretty": "null"
+      }
+    },
+    {
+      "id": "short-string-root",
+      "size": "small",
+      "description": "Short string root",
+      "inputJsonBytes": 5,
+      "metrics": {
+        "lon": {
+          "bytes": 3,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "json-compact": {
+          "bytes": 5,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 3,
+            "cl100k_base": 3
+          }
+        },
+        "toon": {
+          "bytes": 3,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "yaml": {
+          "bytes": 3,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1,
+            "cl100k_base": 1
+          }
+        },
+        "json-pretty": {
+          "bytes": 5,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 3,
+            "cl100k_base": 3
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "\"Ada\"",
+        "lon": "Ada",
+        "toon": "Ada",
+        "yaml": "Ada",
+        "json-pretty": "\"Ada\""
+      }
+    },
+    {
+      "id": "empty-containers",
+      "size": "small",
+      "description": "Empty object and array",
+      "inputJsonBytes": 24,
+      "metrics": {
+        "lon": {
+          "bytes": 20,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 6,
+            "cl100k_base": 6
+          }
+        },
+        "json-compact": {
+          "bytes": 24,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 8,
+            "cl100k_base": 8
+          }
+        },
+        "toon": {
+          "bytes": 17,
+          "lines": 2,
+          "tokens": {
+            "o200k_base": 5,
+            "cl100k_base": 5
+          }
+        },
+        "yaml": {
+          "bytes": 20,
+          "lines": 2,
+          "tokens": {
+            "o200k_base": 6,
+            "cl100k_base": 6
+          }
+        },
+        "json-pretty": {
+          "bytes": 33,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 12
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"object\":{},\"array\":[]}",
+        "lon": "{object:{} array:[]}",
+        "toon": "object:\narray: []",
+        "yaml": "object: {}\narray: []",
+        "json-pretty": "{\n  \"object\": {},\n  \"array\": []\n}"
+      }
+    },
+    {
+      "id": "one-field-object",
+      "size": "small",
+      "description": "Single-field object",
+      "inputJsonBytes": 11,
+      "metrics": {
+        "lon": {
+          "bytes": 9,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 4,
+            "cl100k_base": 4
+          }
+        },
+        "json-compact": {
+          "bytes": 11,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 5,
+            "cl100k_base": 5
+          }
+        },
+        "toon": {
+          "bytes": 8,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 3,
+            "cl100k_base": 3
+          }
+        },
+        "yaml": {
+          "bytes": 8,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 3,
+            "cl100k_base": 3
+          }
+        },
+        "json-pretty": {
+          "bytes": 16,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 8,
+            "cl100k_base": 8
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"ok\":true}",
+        "lon": "{ok:true}",
+        "toon": "ok: true",
+        "yaml": "ok: true",
+        "json-pretty": "{\n  \"ok\": true\n}"
+      }
+    },
+    {
+      "id": "flat-mixed-object",
+      "size": "small",
+      "description": "Flat mixed-type object",
+      "inputJsonBytes": 35,
+      "metrics": {
+        "lon": {
+          "bytes": 27,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 9,
+            "cl100k_base": 9
+          }
+        },
+        "json-compact": {
+          "bytes": 35,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 13,
+            "cl100k_base": 13
+          }
+        },
+        "toon": {
+          "bytes": 28,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 12
+          }
+        },
+        "yaml": {
+          "bytes": 28,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 12
+          }
+        },
+        "json-pretty": {
+          "bytes": 48,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 22,
+            "cl100k_base": 22
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"id\":7,\"name\":\"Ada\",\"active\":true}",
+        "lon": "{id:7 name:Ada active:true}",
+        "toon": "id: 7\nname: Ada\nactive: true",
+        "yaml": "id: 7\nname: Ada\nactive: true",
+        "json-pretty": "{\n  \"id\": 7,\n  \"name\": \"Ada\",\n  \"active\": true\n}"
+      }
+    },
+    {
+      "id": "ambiguous-strings",
+      "size": "small",
+      "description": "Ambiguous strings",
+      "inputJsonBytes": 76,
+      "metrics": {
+        "lon": {
+          "bytes": 66,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 25,
+            "cl100k_base": 25
+          }
+        },
+        "json-compact": {
+          "bytes": 76,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 26,
+            "cl100k_base": 26
+          }
+        },
+        "toon": {
+          "bytes": 68,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 29,
+            "cl100k_base": 29
+          }
+        },
+        "yaml": {
+          "bytes": 66,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 27,
+            "cl100k_base": 27
+          }
+        },
+        "json-pretty": {
+          "bytes": 93,
+          "lines": 6,
+          "tokens": {
+            "o200k_base": 39,
+            "cl100k_base": 39
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"code\":\"01\",\"word\":\"null\",\"date\":\"2026-08-02\",\"url\":\"https://lon.dev/docs\"}",
+        "lon": "{code:\"01\" word:\"null\" date:2026-08-02 url:\"https://lon.dev/docs\"}",
+        "toon": "code: \"01\"\nword: \"null\"\ndate: 2026-08-02\nurl: \"https://lon.dev/docs\"",
+        "yaml": "code: \"01\"\nword: \"null\"\ndate: 2026-08-02\nurl: https://lon.dev/docs",
+        "json-pretty": "{\n  \"code\": \"01\",\n  \"word\": \"null\",\n  \"date\": \"2026-08-02\",\n  \"url\": \"https://lon.dev/docs\"\n}"
+      }
+    },
+    {
+      "id": "bare-string-array",
+      "size": "small",
+      "description": "Safe short-string array",
+      "inputJsonBytes": 22,
+      "metrics": {
+        "lon": {
+          "bytes": 16,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 5,
+            "cl100k_base": 5
+          }
+        },
+        "json-compact": {
+          "bytes": 22,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 7,
+            "cl100k_base": 7
+          }
+        },
+        "toon": {
+          "bytes": 19,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 8,
+            "cl100k_base": 8
+          }
+        },
+        "yaml": {
+          "bytes": 20,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 8,
+            "cl100k_base": 8
+          }
+        },
+        "json-pretty": {
+          "bytes": 32,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 14,
+            "cl100k_base": 14
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "[\"red\",\"green\",\"blue\"]",
+        "lon": "[red green blue]",
+        "toon": "[3]: red,green,blue",
+        "yaml": "- red\n- green\n- blue",
+        "json-pretty": "[\n  \"red\",\n  \"green\",\n  \"blue\"\n]"
+      }
+    },
+    {
+      "id": "mixed-scalar-array",
+      "size": "small",
+      "description": "Mixed scalar array",
+      "inputJsonBytes": 19,
+      "metrics": {
+        "lon": {
+          "bytes": 17,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 7,
+            "cl100k_base": 7
+          }
+        },
+        "json-compact": {
+          "bytes": 19,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 8,
+            "cl100k_base": 8
+          }
+        },
+        "toon": {
+          "bytes": 20,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 9,
+            "cl100k_base": 9
+          }
+        },
+        "yaml": {
+          "bytes": 23,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 12
+          }
+        },
+        "json-pretty": {
+          "bytes": 32,
+          "lines": 6,
+          "tokens": {
+            "o200k_base": 16,
+            "cl100k_base": 16
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "[1,\"Ada\",true,null]",
+        "lon": "[1,Ada,true,null]",
+        "toon": "[4]: 1,Ada,true,null",
+        "yaml": "- 1\n- Ada\n- true\n- null",
+        "json-pretty": "[\n  1,\n  \"Ada\",\n  true,\n  null\n]"
+      }
+    },
+    {
+      "id": "two-uniform-records",
+      "size": "small",
+      "description": "Two uniform short records",
+      "inputJsonBytes": 55,
+      "metrics": {
+        "lon": {
+          "bytes": 29,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 12
+          }
+        },
+        "json-compact": {
+          "bytes": 55,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 21,
+            "cl100k_base": 20
+          }
+        },
+        "toon": {
+          "bytes": 34,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 19,
+            "cl100k_base": 19
+          }
+        },
+        "yaml": {
+          "bytes": 54,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 25,
+            "cl100k_base": 25
+          }
+        },
+        "json-pretty": {
+          "bytes": 115,
+          "lines": 12,
+          "tokens": {
+            "o200k_base": 45,
+            "cl100k_base": 45
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"users\":[{\"id\":1,\"name\":\"Ada\"},{\"id\":2,\"name\":\"Bob\"}]}",
+        "lon": "{users:[id name;1 Ada;2 Bob]}",
+        "toon": "users[2]{id,name}:\n  1,Ada\n  2,Bob",
+        "yaml": "users:\n  - id: 1\n    name: Ada\n  - id: 2\n    name: Bob",
+        "json-pretty": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"Ada\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Bob\"\n    }\n  ]\n}"
+      }
+    },
+    {
+      "id": "three-uniform-records",
+      "size": "small",
+      "description": "Three uniform short records",
+      "inputJsonBytes": 77,
+      "metrics": {
+        "lon": {
+          "bytes": 35,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 15,
+            "cl100k_base": 15
+          }
+        },
+        "json-compact": {
+          "bytes": 77,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 29,
+            "cl100k_base": 28
+          }
+        },
+        "toon": {
+          "bytes": 42,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 25,
+            "cl100k_base": 25
+          }
+        },
+        "yaml": {
+          "bytes": 78,
+          "lines": 7,
+          "tokens": {
+            "o200k_base": 37,
+            "cl100k_base": 37
+          }
+        },
+        "json-pretty": {
+          "bytes": 163,
+          "lines": 16,
+          "tokens": {
+            "o200k_base": 63,
+            "cl100k_base": 63
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"users\":[{\"id\":1,\"name\":\"Ada\"},{\"id\":2,\"name\":\"Bob\"},{\"id\":3,\"name\":\"Lin\"}]}",
+        "lon": "{users:[id name;1 Ada;2 Bob;3 Lin]}",
+        "toon": "users[3]{id,name}:\n  1,Ada\n  2,Bob\n  3,Lin",
+        "yaml": "users:\n  - id: 1\n    name: Ada\n  - id: 2\n    name: Bob\n  - id: 3\n    name: Lin",
+        "json-pretty": "{\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"Ada\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"Bob\"\n    },\n    {\n      \"id\": 3,\n      \"name\": \"Lin\"\n    }\n  ]\n}"
+      }
+    },
+    {
+      "id": "nested-object",
+      "size": "small",
+      "description": "Small nested object",
+      "inputJsonBytes": 57,
+      "metrics": {
+        "lon": {
+          "bytes": 43,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 15,
+            "cl100k_base": 15
+          }
+        },
+        "json-compact": {
+          "bytes": 57,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 19,
+            "cl100k_base": 17
+          }
+        },
+        "toon": {
+          "bytes": 48,
+          "lines": 4,
+          "tokens": {
+            "o200k_base": 20,
+            "cl100k_base": 20
+          }
+        },
+        "yaml": {
+          "bytes": 53,
+          "lines": 6,
+          "tokens": {
+            "o200k_base": 22,
+            "cl100k_base": 22
+          }
+        },
+        "json-pretty": {
+          "bytes": 94,
+          "lines": 10,
+          "tokens": {
+            "o200k_base": 38,
+            "cl100k_base": 38
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"user\":{\"id\":1,\"name\":\"Ada\"},\"roles\":[\"admin\",\"editor\"]}",
+        "lon": "{user:{id:1 name:Ada} roles:[admin editor]}",
+        "toon": "user:\n  id: 1\n  name: Ada\nroles[2]: admin,editor",
+        "yaml": "user:\n  id: 1\n  name: Ada\nroles:\n  - admin\n  - editor",
+        "json-pretty": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Ada\"\n  },\n  \"roles\": [\n    \"admin\",\n    \"editor\"\n  ]\n}"
+      }
+    },
+    {
+      "id": "heterogeneous-records",
+      "size": "small",
+      "description": "Non-uniform record array",
+      "inputJsonBytes": 25,
+      "metrics": {
+        "lon": {
+          "bytes": 19,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 9,
+            "cl100k_base": 9
+          }
+        },
+        "json-compact": {
+          "bytes": 25,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 11,
+            "cl100k_base": 11
+          }
+        },
+        "toon": {
+          "bytes": 28,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 15,
+            "cl100k_base": 15
+          }
+        },
+        "yaml": {
+          "bytes": 19,
+          "lines": 2,
+          "tokens": {
+            "o200k_base": 10,
+            "cl100k_base": 10
+          }
+        },
+        "json-pretty": {
+          "bytes": 50,
+          "lines": 8,
+          "tokens": {
+            "o200k_base": 24,
+            "cl100k_base": 24
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "[{\"id\":1},{\"name\":\"Ada\"}]",
+        "lon": "[{id:1},{name:Ada}]",
+        "toon": "[2]:\n  - id: 1\n  - name: Ada",
+        "yaml": "- id: 1\n- name: Ada",
+        "json-pretty": "[\n  {\n    \"id\": 1\n  },\n  {\n    \"name\": \"Ada\"\n  }\n]"
+      }
+    },
+    {
+      "id": "unicode-text",
+      "size": "small",
+      "description": "Multilingual text and emoji",
+      "inputJsonBytes": 69,
+      "metrics": {
+        "lon": {
+          "bytes": 59,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 15,
+            "cl100k_base": 21
+          }
+        },
+        "json-compact": {
+          "bytes": 69,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 17,
+            "cl100k_base": 23
+          }
+        },
+        "toon": {
+          "bytes": 58,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 18
+          }
+        },
+        "yaml": {
+          "bytes": 58,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 12,
+            "cl100k_base": 18
+          }
+        },
+        "json-pretty": {
+          "bytes": 82,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 27,
+            "cl100k_base": 33
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"message\":\"안녕하세요 세계\",\"emoji\":\"🙂\",\"city\":\"München\"}",
+        "lon": "{message:\"안녕하세요 세계\" emoji:🙂 city:München}",
+        "toon": "message: 안녕하세요 세계\nemoji: 🙂\ncity: München",
+        "yaml": "message: 안녕하세요 세계\nemoji: 🙂\ncity: München",
+        "json-pretty": "{\n  \"message\": \"안녕하세요 세계\",\n  \"emoji\": \"🙂\",\n  \"city\": \"München\"\n}"
+      }
+    },
+    {
+      "id": "escaped-text",
+      "size": "small",
+      "description": "Newline and structural characters",
+      "inputJsonBytes": 69,
+      "metrics": {
+        "lon": {
+          "bytes": 63,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 25,
+            "cl100k_base": 25
+          }
+        },
+        "json-compact": {
+          "bytes": 69,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 25,
+            "cl100k_base": 25
+          }
+        },
+        "toon": {
+          "bytes": 64,
+          "lines": 3,
+          "tokens": {
+            "o200k_base": 27,
+            "cl100k_base": 27
+          }
+        },
+        "yaml": {
+          "bytes": 62,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 26,
+            "cl100k_base": 26
+          }
+        },
+        "json-pretty": {
+          "bytes": 82,
+          "lines": 5,
+          "tokens": {
+            "o200k_base": 35,
+            "cl100k_base": 35
+          }
+        }
+      },
+      "outputs": {
+        "json-compact": "{\"note\":\"line 1\\nline 2\",\"path\":\"C:\\\\tmp\\\\data\",\"expression\":\"a:b,c\"}",
+        "lon": "{note:\"line 1\\nline 2\" path:\"C:\\\\tmp\\\\data\" expression:\"a:b,c\"}",
+        "toon": "note: \"line 1\\nline 2\"\npath: \"C:\\\\tmp\\\\data\"\nexpression: \"a:b,c\"",
+        "yaml": "note: |-\n  line 1\n  line 2\npath: C:\\tmp\\data\nexpression: a:b,c",
+        "json-pretty": "{\n  \"note\": \"line 1\\nline 2\",\n  \"path\": \"C:\\\\tmp\\\\data\",\n  \"expression\": \"a:b,c\"\n}"
+      }
+    },
+    {
+      "id": "users-10",
+      "size": "medium",
+      "description": "10 uniform user records",
+      "inputJsonBytes": 1038,
+      "metrics": {
+        "lon": {
+          "bytes": 550,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 171,
+            "cl100k_base": 172
+          }
+        },
+        "json-compact": {
+          "bytes": 1038,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 306,
+            "cl100k_base": 306
+          }
+        },
+        "toon": {
+          "bytes": 552,
+          "lines": 11,
+          "tokens": {
+            "o200k_base": 195,
+            "cl100k_base": 196
+          }
+        },
+        "yaml": {
+          "bytes": 1133,
+          "lines": 61,
+          "tokens": {
+            "o200k_base": 392,
+            "cl100k_base": 393
+          }
+        },
+        "json-pretty": {
+          "bytes": 1626,
+          "lines": 84,
+          "tokens": {
+            "o200k_base": 520,
+            "cl100k_base": 521
+          }
+        }
+      }
+    },
+    {
+      "id": "users-50",
+      "size": "medium",
+      "description": "50 uniform user records",
+      "inputJsonBytes": 5210,
+      "metrics": {
+        "lon": {
+          "bytes": 2642,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 814,
+            "cl100k_base": 815
+          }
+        },
+        "json-compact": {
+          "bytes": 5210,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1509,
+            "cl100k_base": 1509
+          }
+        },
+        "toon": {
+          "bytes": 2644,
+          "lines": 51,
+          "tokens": {
+            "o200k_base": 918,
+            "cl100k_base": 919
+          }
+        },
+        "yaml": {
+          "bytes": 5705,
+          "lines": 301,
+          "tokens": {
+            "o200k_base": 1955,
+            "cl100k_base": 1956
+          }
+        },
+        "json-pretty": {
+          "bytes": 8118,
+          "lines": 404,
+          "tokens": {
+            "o200k_base": 2563,
+            "cl100k_base": 2564
+          }
+        }
+      }
+    },
+    {
+      "id": "orders-10",
+      "size": "medium",
+      "description": "10 nested orders",
+      "inputJsonBytes": 2866,
+      "metrics": {
+        "lon": {
+          "bytes": 1571,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 663,
+            "cl100k_base": 662
+          }
+        },
+        "json-compact": {
+          "bytes": 2866,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 979,
+            "cl100k_base": 948
+          }
+        },
+        "toon": {
+          "bytes": 2757,
+          "lines": 120,
+          "tokens": {
+            "o200k_base": 1060,
+            "cl100k_base": 1050
+          }
+        },
+        "yaml": {
+          "bytes": 3499,
+          "lines": 177,
+          "tokens": {
+            "o200k_base": 1224,
+            "cl100k_base": 1214
+          }
+        },
+        "json-pretty": {
+          "bytes": 5228,
+          "lines": 258,
+          "tokens": {
+            "o200k_base": 1637,
+            "cl100k_base": 1627
+          }
+        }
+      }
+    },
+    {
+      "id": "flags-20",
+      "size": "medium",
+      "description": "20 keyed configuration entries",
+      "inputJsonBytes": 1733,
+      "metrics": {
+        "lon": {
+          "bytes": 1451,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 484,
+            "cl100k_base": 463
+          }
+        },
+        "json-compact": {
+          "bytes": 1733,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 603,
+            "cl100k_base": 564
+          }
+        },
+        "toon": {
+          "bytes": 866,
+          "lines": 21,
+          "tokens": {
+            "o200k_base": 415,
+            "cl100k_base": 414
+          }
+        },
+        "yaml": {
+          "bytes": 1868,
+          "lines": 101,
+          "tokens": {
+            "o200k_base": 701,
+            "cl100k_base": 681
+          }
+        },
+        "json-pretty": {
+          "bytes": 2601,
+          "lines": 124,
+          "tokens": {
+            "o200k_base": 909,
+            "cl100k_base": 889
+          }
+        }
+      }
+    },
+    {
+      "id": "events-25",
+      "size": "medium",
+      "description": "25 semi-uniform event records",
+      "inputJsonBytes": 3335,
+      "metrics": {
+        "lon": {
+          "bytes": 2915,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 976,
+            "cl100k_base": 926
+          }
+        },
+        "json-compact": {
+          "bytes": 3335,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 1113,
+            "cl100k_base": 1037
+          }
+        },
+        "toon": {
+          "bytes": 3661,
+          "lines": 160,
+          "tokens": {
+            "o200k_base": 1392,
+            "cl100k_base": 1342
+          }
+        },
+        "yaml": {
+          "bytes": 3607,
+          "lines": 160,
+          "tokens": {
+            "o200k_base": 1390,
+            "cl100k_base": 1340
+          }
+        },
+        "json-pretty": {
+          "bytes": 4898,
+          "lines": 216,
+          "tokens": {
+            "o200k_base": 1669,
+            "cl100k_base": 1619
+          }
+        }
+      }
+    },
+    {
+      "id": "nested-config",
+      "size": "medium",
+      "description": "Deep application configuration",
+      "inputJsonBytes": 712,
+      "metrics": {
+        "lon": {
+          "bytes": 562,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 148,
+            "cl100k_base": 146
+          }
+        },
+        "json-compact": {
+          "bytes": 712,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 197,
+            "cl100k_base": 189
+          }
+        },
+        "toon": {
+          "bytes": 653,
+          "lines": 28,
+          "tokens": {
+            "o200k_base": 213,
+            "cl100k_base": 209
+          }
+        },
+        "yaml": {
+          "bytes": 796,
+          "lines": 43,
+          "tokens": {
+            "o200k_base": 242,
+            "cl100k_base": 239
+          }
+        },
+        "json-pretty": {
+          "bytes": 1174,
+          "lines": 65,
+          "tokens": {
+            "o200k_base": 350,
+            "cl100k_base": 346
+          }
+        }
+      }
+    },
+    {
+      "id": "string-list-100",
+      "size": "medium",
+      "description": "100-item string list",
+      "inputJsonBytes": 902,
+      "metrics": {
+        "lon": {
+          "bytes": 700,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 304,
+            "cl100k_base": 304
+          }
+        },
+        "json-compact": {
+          "bytes": 902,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 404,
+            "cl100k_base": 403
+          }
+        },
+        "toon": {
+          "bytes": 702,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 403,
+            "cl100k_base": 403
+          }
+        },
+        "yaml": {
+          "bytes": 1097,
+          "lines": 101,
+          "tokens": {
+            "o200k_base": 601,
+            "cl100k_base": 601
+          }
+        },
+        "json-pretty": {
+          "bytes": 1410,
+          "lines": 104,
+          "tokens": {
+            "o200k_base": 609,
+            "cl100k_base": 609
+          }
+        }
+      }
+    },
+    {
+      "id": "numeric-matrix",
+      "size": "medium",
+      "description": "20 x 10 numeric matrix",
+      "inputJsonBytes": 742,
+      "metrics": {
+        "lon": {
+          "bytes": 740,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 404,
+            "cl100k_base": 404
+          }
+        },
+        "json-compact": {
+          "bytes": 742,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 405,
+            "cl100k_base": 405
+          }
+        },
+        "toon": {
+          "bytes": 901,
+          "lines": 21,
+          "tokens": {
+            "o200k_base": 523,
+            "cl100k_base": 523
+          }
+        },
+        "yaml": {
+          "bytes": 1897,
+          "lines": 201,
+          "tokens": {
+            "o200k_base": 1021,
+            "cl100k_base": 1021
+          }
+        },
+        "json-pretty": {
+          "bytes": 2350,
+          "lines": 244,
+          "tokens": {
+            "o200k_base": 889,
+            "cl100k_base": 889
+          }
+        }
+      }
+    },
+    {
+      "id": "users-500",
+      "size": "large",
+      "description": "500 uniform user records",
+      "inputJsonBytes": 52952,
+      "metrics": {
+        "lon": {
+          "bytes": 26984,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 8051,
+            "cl100k_base": 8051
+          }
+        },
+        "json-compact": {
+          "bytes": 52952,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 15046,
+            "cl100k_base": 15045
+          }
+        },
+        "toon": {
+          "bytes": 26987,
+          "lines": 501,
+          "tokens": {
+            "o200k_base": 9055,
+            "cl100k_base": 9055
+          }
+        },
+        "yaml": {
+          "bytes": 57947,
+          "lines": 3001,
+          "tokens": {
+            "o200k_base": 19542,
+            "cl100k_base": 19542
+          }
+        },
+        "json-pretty": {
+          "bytes": 81960,
+          "lines": 4004,
+          "tokens": {
+            "o200k_base": 25550,
+            "cl100k_base": 25550
+          }
+        }
+      }
+    },
+    {
+      "id": "orders-200",
+      "size": "large",
+      "description": "200 nested orders",
+      "inputJsonBytes": 57779,
+      "metrics": {
+        "lon": {
+          "bytes": 30010,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 12803,
+            "cl100k_base": 12802
+          }
+        },
+        "json-compact": {
+          "bytes": 57779,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 19485,
+            "cl100k_base": 18884
+          }
+        },
+        "toon": {
+          "bytes": 55011,
+          "lines": 2400,
+          "tokens": {
+            "o200k_base": 20990,
+            "cl100k_base": 20790
+          }
+        },
+        "yaml": {
+          "bytes": 70952,
+          "lines": 3597,
+          "tokens": {
+            "o200k_base": 24574,
+            "cl100k_base": 24374
+          }
+        },
+        "json-pretty": {
+          "bytes": 106121,
+          "lines": 5198,
+          "tokens": {
+            "o200k_base": 32873,
+            "cl100k_base": 32673
+          }
+        }
+      }
+    },
+    {
+      "id": "flags-500",
+      "size": "large",
+      "description": "500 keyed configuration entries",
+      "inputJsonBytes": 43091,
+      "metrics": {
+        "lon": {
+          "bytes": 36089,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 12004,
+            "cl100k_base": 11503
+          }
+        },
+        "json-compact": {
+          "bytes": 43091,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 15003,
+            "cl100k_base": 14004
+          }
+        },
+        "toon": {
+          "bytes": 20625,
+          "lines": 501,
+          "tokens": {
+            "o200k_base": 10015,
+            "cl100k_base": 10014
+          }
+        },
+        "yaml": {
+          "bytes": 46586,
+          "lines": 2501,
+          "tokens": {
+            "o200k_base": 17501,
+            "cl100k_base": 17001
+          }
+        },
+        "json-pretty": {
+          "bytes": 64599,
+          "lines": 3004,
+          "tokens": {
+            "o200k_base": 22509,
+            "cl100k_base": 22009
+          }
+        }
+      }
+    },
+    {
+      "id": "events-1000",
+      "size": "large",
+      "description": "1,000 semi-uniform event records",
+      "inputJsonBytes": 131990,
+      "metrics": {
+        "lon": {
+          "bytes": 115442,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 38438,
+            "cl100k_base": 36438
+          }
+        },
+        "json-compact": {
+          "bytes": 131990,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 43870,
+            "cl100k_base": 40869
+          }
+        },
+        "toon": {
+          "bytes": 144810,
+          "lines": 6274,
+          "tokens": {
+            "o200k_base": 55051,
+            "cl100k_base": 53051
+          }
+        },
+        "yaml": {
+          "bytes": 142804,
+          "lines": 6274,
+          "tokens": {
+            "o200k_base": 55048,
+            "cl100k_base": 53048
+          }
+        },
+        "json-pretty": {
+          "bytes": 193183,
+          "lines": 8368,
+          "tokens": {
+            "o200k_base": 65693,
+            "cl100k_base": 63693
+          }
+        }
+      }
+    },
+    {
+      "id": "analytics-365",
+      "size": "large",
+      "description": "365 days of uniform analytics metrics",
+      "inputJsonBytes": 36804,
+      "metrics": {
+        "lon": {
+          "bytes": 13126,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 8398,
+            "cl100k_base": 8398
+          }
+        },
+        "json-compact": {
+          "bytes": 36804,
+          "lines": 1,
+          "tokens": {
+            "o200k_base": 14232,
+            "cl100k_base": 14231
+          }
+        },
+        "toon": {
+          "bytes": 13859,
+          "lines": 366,
+          "tokens": {
+            "o200k_base": 9136,
+            "cl100k_base": 9136
+          }
+        },
+        "yaml": {
+          "bytes": 41909,
+          "lines": 2191,
+          "tokens": {
+            "o200k_base": 17878,
+            "cl100k_base": 17878
+          }
+        },
+        "json-pretty": {
+          "bytes": 57982,
+          "lines": 2924,
+          "tokens": {
+            "o200k_base": 22266,
+            "cl100k_base": 22266
+          }
+        }
+      }
+    }
+  ]
+}
