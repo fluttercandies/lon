@@ -1,0 +1,88 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "LON",
+  "scopeName": "source.lon",
+  "patterns": [
+    { "include": "#table-header" },
+    { "include": "#string" },
+    { "include": "#literal" },
+    { "include": "#number" },
+    { "include": "#key" },
+    { "include": "#punctuation" },
+    { "include": "#bare-token" }
+  ],
+  "repository": {
+    "table-header": {
+      "name": "meta.table.header.lon",
+      "begin": "\\[(?=[^\\[\\]\\n;]*;)",
+      "end": "(?<=;)",
+      "patterns": [
+        { "include": "#punctuation" },
+        { "include": "#string" },
+        { "include": "#bare-token" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.definition.bracket.curly.lon",
+          "match": "[\\{\\}]"
+        },
+        {
+          "name": "punctuation.definition.bracket.square.lon",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.separator.key-value.lon",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.separator.semicolon.lon",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.comma.lon",
+          "match": ","
+        }
+      ]
+    },
+    "literal": {
+      "name": "constant.language.lon",
+      "match": "(?<![^\\s{[\\]:;,])(null|true|false)(?![^\\s}\\]]:;,'])"
+    },
+    "number": {
+      "name": "constant.numeric.lon",
+      "match": "(?<![^\\s{[\\]:;,])-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?![^\\s}\\]]:;,'])"
+    },
+    "string": {
+      "name": "string.quoted.double.lon",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.lon",
+          "match": "\\\\(?:[\"\\\\/bfnrt]|u[0-9A-Fa-f]{4})"
+        },
+        {
+          "name": "invalid.illegal.escape.lon",
+          "match": "\\\\."
+        },
+        {
+          "name": "invalid.illegal.unescaped-control.lon",
+          "match": "[\\x00-\\x1F]"
+        }
+      ]
+    },
+    "key": {
+      "name": "meta.structure.dictionary.key.lon",
+      "match": "[^\\s{}\\[\\]:;,\"']+(?:'[^\\s{}\\[\\]:;,\"']+)*(?=:)",
+      "captures": {
+        "0": { "name": "support.type.property-name.lon" }
+      }
+    },
+    "bare-token": {
+      "name": "string.unquoted.lon",
+      "match": "[^\\s{}\\[\\]:;,\"']+(?:'[^\\s{}\\[\\]:;,\"']+)*"
+    }
+  }
+}

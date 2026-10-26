@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/fluttercandies/lon/blob/main/conformance/schema.json",
+  "title": "LON conformance fixtures",
+  "description": "Schema for conformance/v1.json: an array of cross-implementation test cases. Each case carries a name, a JSON input text, the expected canonical LON encoding, and the canonical JSON produced by decoding that LON text.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "json": {
+        "type": "string"
+      },
+      "lon": {
+        "type": "string"
+      },
+      "canonicalJson": {
+        "type": "string"
+      }
+    },
+    "required": ["name", "json", "lon", "canonicalJson"],
+    "additionalProperties": false
+  }
+}
