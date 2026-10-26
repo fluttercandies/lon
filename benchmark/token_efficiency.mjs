@@ -13,7 +13,7 @@ import { encode as encodeO200k } from 'gpt-tokenizer/encoding/o200k_base'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 
 const BENCHMARK_DIR = dirname(fileURLToPath(import.meta.url))
-const ROOT_DIR = resolve(BENCHMARK_DIR, '..')
+const DART_DIR = resolve(BENCHMARK_DIR, '../dart')
 const RESULTS_DIR = join(BENCHMARK_DIR, 'results')
 const BINARY_PATH = join(
   tmpdir(),
@@ -230,7 +230,7 @@ const SCENARIOS = [
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
-    cwd: ROOT_DIR,
+    cwd: DART_DIR,
     encoding: 'utf8',
     maxBuffer: MAX_BUFFER_BYTES,
     ...options,
@@ -520,7 +520,7 @@ ${renderExamples(snapshot.scenarios)}
 }
 
 function extractLonVersion() {
-  const pubspec = readFileSync(join(ROOT_DIR, 'pubspec.yaml'), 'utf8')
+  const pubspec = readFileSync(join(DART_DIR, 'pubspec.yaml'), 'utf8')
   const match = /^version:\s*(\S+)\s*$/m.exec(pubspec)
   if (!match) {
     throw new Error('Unable to read LON version from pubspec.yaml')

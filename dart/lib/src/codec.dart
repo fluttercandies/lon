@@ -8,17 +8,37 @@ import 'lon_writer.dart';
 const lonFormatVersion = 1;
 
 /// Lossless JSON-value codec for Language Object Notation v1.
+///
+/// ```dart
+/// final encoded = lon.encode({
+///   'users': [
+///     {'id': 1, 'name': 'Ada'},
+///     {'id': 2, 'name': 'Bob'},
+///   ],
+/// }); // {users:[id name;1 Ada;2 Bob]}
+/// final value = lon.decode(encoded);
+/// ```
 final class LonCodec {
   const LonCodec({
     this.useTables = true,
+    this.pretty = false,
     this.maxDepth = 512,
     this.maxExpandedElements = 1000000,
     this.maxInputCodeUnits = 64 * 1024 * 1024,
     this.maxOutputCodeUnits = 64 * 1024 * 1024,
   });
 
-  /// Enables self-describing fixed-schema record tables.
+  /// Enables self-describing fixed-schema record tables when encoding.
+  /// Decoding accepts table syntax regardless of this flag.
   final bool useTables;
+
+  /// Renders encoded LON across lines, indented two spaces per nesting
+  /// depth: every object member, table row, and container-array element
+  /// occupies its own line between the container's brackets, while table
+  /// rows and scalar arrays stay inline. Also selects standard
+  /// two-space-indented JSON from [decodeJson]. Both outputs decode to
+  /// exactly the same values as the compact forms.
+  final bool pretty;
 
   /// Maximum accepted or encoded container nesting depth.
   final int maxDepth;
@@ -36,10 +56,7 @@ final class LonCodec {
   /// Encodes a JSON-compatible Dart value as canonical LON.
   String encode(Object? value) {
     _validateConfiguration();
-    return LonWriter(
-      useTables: useTables,
-      maxOutputCodeUnits: maxOutputCodeUnits,
-    ).write(
+    return _newWriter().write(
       jsonNodeFromDart(
         value,
         maxDepth: maxDepth,
@@ -70,10 +87,7 @@ final class LonCodec {
   String encodeJson(String source) {
     _validateConfiguration();
     _validateInput(source);
-    return LonWriter(
-      useTables: useTables,
-      maxOutputCodeUnits: maxOutputCodeUnits,
-    ).write(
+    return _newWriter().write(
       JsonTextParser(
         source,
         maxDepth: maxDepth,
@@ -82,19 +96,27 @@ final class LonCodec {
     );
   }
 
-  /// Converts LON to compact JSON while preserving member order, duplicate
-  /// keys, and number lexemes.
+  LonWriter _newWriter() => LonWriter(
+        useTables: useTables,
+        pretty: pretty,
+        maxOutputCodeUnits: maxOutputCodeUnits,
+      );
+
+  /// Converts LON to JSON while preserving member order, duplicate keys,
+  /// and number lexemes. Output is compact unless [pretty] selects standard
+  /// two-space indentation.
   String decodeJson(String source) {
     _validateConfiguration();
     _validateInput(source);
-    return writeJson(
-      LonTextParser(
-        source,
-        maxDepth: maxDepth,
-        maxExpandedElements: maxExpandedElements,
-      ).parse(),
-      maxCodeUnits: maxOutputCodeUnits,
-    );
+    final node = LonTextParser(
+      source,
+      maxDepth: maxDepth,
+      maxExpandedElements: maxExpandedElements,
+    ).parse();
+    if (pretty) {
+      return writePrettyJson(node, maxCodeUnits: maxOutputCodeUnits);
+    }
+    return writeJson(node, maxCodeUnits: maxOutputCodeUnits);
   }
 
   void _validateConfiguration() {
@@ -120,6 +142,7 @@ const lon = LonCodec();
 String jsonToLon(
   String source, {
   bool useTables = true,
+  bool pretty = false,
   int maxDepth = 512,
   int maxExpandedElements = 1000000,
   int maxInputCodeUnits = 64 * 1024 * 1024,
@@ -127,6 +150,7 @@ String jsonToLon(
 }) =>
     LonCodec(
       useTables: useTables,
+      pretty: pretty,
       maxDepth: maxDepth,
       maxExpandedElements: maxExpandedElements,
       maxInputCodeUnits: maxInputCodeUnits,

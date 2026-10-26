@@ -16,9 +16,15 @@ Object? jsonNodeToDart(JsonNode node) {
     case JsonBooleanNode(:final value):
       return value;
     case JsonNumberNode(:final lexeme):
-      if (!lexeme.contains('.') &&
-          !lexeme.contains('e') &&
-          !lexeme.contains('E')) {
+      var integralLexeme = true;
+      for (var index = 0; index < lexeme.length; index++) {
+        final code = lexeme.codeUnitAt(index);
+        if (code == 0x2E || code == 0x65 || code == 0x45) {
+          integralLexeme = false;
+          break;
+        }
+      }
+      if (integralLexeme) {
         final integer = int.tryParse(lexeme);
         if (integer != null) {
           return integer;
@@ -28,7 +34,11 @@ Object? jsonNodeToDart(JsonNode node) {
     case JsonStringNode(:final value):
       return value;
     case JsonArrayNode(:final values):
-      return values.map(jsonNodeToDart).toList(growable: false);
+      final result = List<Object?>.filled(values.length, null, growable: false);
+      for (var index = 0; index < values.length; index++) {
+        result[index] = jsonNodeToDart(values[index]);
+      }
+      return result;
     case JsonObjectNode(:final members):
       final result = <String, Object?>{};
       for (final member in members) {

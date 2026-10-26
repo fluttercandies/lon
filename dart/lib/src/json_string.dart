@@ -6,8 +6,12 @@ final class ParsedJsonString {
 }
 
 bool requiresJsonEscapeForVisibility(int rune) {
+  // Fast path: controls and C1 always escape; printable ASCII and NBSP never.
   if (rune < 0x20 || (rune >= 0x7F && rune <= 0x9F)) {
     return true;
+  }
+  if (rune < 0xA1) {
+    return false;
   }
   if ((rune >= 0xFDD0 && rune <= 0xFDEF) ||
       (rune <= 0x10FFFF && (rune & 0xFFFE) == 0xFFFE)) {
@@ -42,8 +46,9 @@ ParsedJsonString parseJsonStringAt(
   var cursor = offset + 1;
   var segmentStart = cursor;
   StringBuffer? buffer;
+  final length = source.length;
 
-  while (cursor < source.length) {
+  while (cursor < length) {
     final code = source.codeUnitAt(cursor);
     if (code == 0x22) {
       final end = cursor;
@@ -54,6 +59,61 @@ ParsedJsonString parseJsonStringAt(
       buffer.write(source.substring(segmentStart, end));
       return ParsedJsonString(buffer.toString(), cursor);
     }
+    if (code == 0x5C) {
+      buffer ??= StringBuffer();
+      buffer.write(source.substring(segmentStart, cursor));
+      cursor++;
+      if (cursor >= length) {
+        throw FormatException(
+            'Incomplete JSON escape sequence', source, cursor);
+      }
+
+      final escape = source.codeUnitAt(cursor++);
+      switch (escape) {
+        case 0x22:
+          buffer.writeCharCode(0x22);
+        case 0x5C:
+          buffer.writeCharCode(0x5C);
+        case 0x2F:
+          buffer.writeCharCode(0x2F);
+        case 0x62:
+          buffer.writeCharCode(0x08);
+        case 0x66:
+          buffer.writeCharCode(0x0C);
+        case 0x6E:
+          buffer.writeCharCode(0x0A);
+        case 0x72:
+          buffer.writeCharCode(0x0D);
+        case 0x74:
+          buffer.writeCharCode(0x09);
+        case 0x75:
+          if (cursor + 4 > length) {
+            throw FormatException(
+              'Incomplete Unicode escape sequence',
+              source,
+              cursor,
+            );
+          }
+          var value = 0;
+          for (var index = 0; index < 4; index++) {
+            final digit = _hexValue(source.codeUnitAt(cursor++));
+            if (digit < 0) {
+              throw FormatException(
+                'Invalid Unicode escape sequence',
+                source,
+                cursor - 1,
+              );
+            }
+            value = (value << 4) | digit;
+          }
+          buffer.writeCharCode(value);
+        default:
+          throw FormatException(
+              'Invalid JSON escape sequence', source, cursor - 1);
+      }
+      segmentStart = cursor;
+      continue;
+    }
     if (code < 0x20) {
       throw FormatException(
         'Unescaped control character in JSON string',
@@ -61,69 +121,18 @@ ParsedJsonString parseJsonStringAt(
         cursor,
       );
     }
-    if (code != 0x5C) {
-      if (requireVisibleLiterals && !_isVisibleLiteralAt(source, cursor)) {
-        throw FormatException(
-          'Invisible or unpaired code point must use a Unicode escape',
-          source,
-          cursor,
-        );
-      }
-      cursor++;
-      continue;
+    // Codes 0x20..0x7E are always visible literals; only 0x7F and up can
+    // require the Unicode visibility escape rule.
+    if (code >= 0x7F &&
+        requireVisibleLiterals &&
+        !_isVisibleLiteralAt(source, cursor)) {
+      throw FormatException(
+        'Invisible or unpaired code point must use a Unicode escape',
+        source,
+        cursor,
+      );
     }
-
-    buffer ??= StringBuffer();
-    buffer.write(source.substring(segmentStart, cursor));
     cursor++;
-    if (cursor >= source.length) {
-      throw FormatException('Incomplete JSON escape sequence', source, cursor);
-    }
-
-    final escape = source.codeUnitAt(cursor++);
-    switch (escape) {
-      case 0x22:
-        buffer.writeCharCode(0x22);
-      case 0x5C:
-        buffer.writeCharCode(0x5C);
-      case 0x2F:
-        buffer.writeCharCode(0x2F);
-      case 0x62:
-        buffer.writeCharCode(0x08);
-      case 0x66:
-        buffer.writeCharCode(0x0C);
-      case 0x6E:
-        buffer.writeCharCode(0x0A);
-      case 0x72:
-        buffer.writeCharCode(0x0D);
-      case 0x74:
-        buffer.writeCharCode(0x09);
-      case 0x75:
-        if (cursor + 4 > source.length) {
-          throw FormatException(
-            'Incomplete Unicode escape sequence',
-            source,
-            cursor,
-          );
-        }
-        var value = 0;
-        for (var index = 0; index < 4; index++) {
-          final digit = _hexValue(source.codeUnitAt(cursor++));
-          if (digit < 0) {
-            throw FormatException(
-              'Invalid Unicode escape sequence',
-              source,
-              cursor - 1,
-            );
-          }
-          value = (value << 4) | digit;
-        }
-        buffer.writeCharCode(value);
-      default:
-        throw FormatException(
-            'Invalid JSON escape sequence', source, cursor - 1);
-    }
-    segmentStart = cursor;
   }
 
   throw FormatException('Unterminated JSON string', source, cursor);

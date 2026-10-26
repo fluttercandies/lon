@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0 - 2026-10-26
+
+- Add optional multi-line rendering: `LonCodec(pretty: true)` and `jsonToLon(..., pretty: true)` place each object member and table row on its own line with two-space-per-depth indentation; `LonCodec(pretty: true).decodeJson` emits standard indented JSON.
+- Add `--pretty` to the `lon encode` and `lon decode` CLI commands.
+- Add `lon check` to validate that input is well-formed LON: silent exit 0 on success, 65 on invalid input, 66 on file-system errors.
+- Fix the CLI to reject a leading UTF-8 byte-order mark instead of silently stripping it, matching codec behavior.
+- Improve codec throughput 1.4x-2.9x (AOT, `tool/bench.dart`): replace the per-token regex classifiers with hand-rolled scanners behind an exact non-ASCII folding fallback, add fast paths for printable-ASCII visibility checks, bulk-write unescaped string runs, cache hot parser loops' locals, preallocate decoded arrays, and read CLI input through `BytesBuilder`. Canonical output is byte-for-byte unchanged.
+- Add `tool/bench.dart`, a zero-dependency Stopwatch throughput benchmark (small/medium/large payloads, median-of-9 rounds, `dart run` or AOT-compiled).
+- Document that `useTables` applies to encoding only, and tighten static analysis lints.
+- Expand boundary, limit, and round-trip test coverage.
+
 ## 1.0.1 - 2026-08-02
 
 - Add 20,000-case multi-seed structural property tests, exact ordinary-container depth boundaries, dynamic value and record-shape matrices, duplicate-key records, deterministic LON mutations, and exhaustive complex-container truncations.

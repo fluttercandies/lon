@@ -73,15 +73,17 @@ final class LonTextParser {
   bool _hasRecordTableHeader() => _hasSchemaTerminator(_offset);
 
   bool _hasSchemaTerminator(int cursor) {
+    final source = this.source;
+    final length = source.length;
     var nestedSchemaDepth = 0;
 
-    while (cursor < source.length) {
+    while (cursor < length) {
       final code = source.codeUnitAt(cursor);
       if (code == 0x22) {
         cursor++;
-        while (cursor < source.length) {
+        while (cursor < length) {
           final quotedCode = source.codeUnitAt(cursor++);
-          if (quotedCode == 0x5C && cursor < source.length) {
+          if (quotedCode == 0x5C && cursor < length) {
             cursor++;
           } else if (quotedCode == 0x22) {
             break;
@@ -325,9 +327,12 @@ final class LonTextParser {
   }
 
   String _readKeyBeforeColon() {
+    final source = this.source;
+    final length = source.length;
     final start = _offset;
-    while (!_isAtEnd) {
-      final code = source.codeUnitAt(_offset);
+    var offset = start;
+    while (offset < length) {
+      final code = source.codeUnitAt(offset);
       if (code == 0x3A || isLonWhitespace(code)) {
         break;
       }
@@ -339,14 +344,16 @@ final class LonTextParser {
           code == 0x5D ||
           code == 0x7B ||
           code == 0x7D) {
+        _offset = offset;
         _fail('Invalid character in bare object key');
       }
-      _offset++;
+      offset++;
     }
-    if (start == _offset) {
+    _offset = offset;
+    if (start == offset) {
       _fail('Expected an object key');
     }
-    final key = source.substring(start, _offset);
+    final key = source.substring(start, offset);
     if (!canUseBareLonKey(key)) {
       _failAt('Invalid bare object key must be quoted', start);
     }
@@ -364,22 +371,30 @@ final class LonTextParser {
   }
 
   String _readBareToken() {
+    final source = this.source;
+    final length = source.length;
     final start = _offset;
-    while (!_isAtEnd && !isLonTokenDelimiter(source.codeUnitAt(_offset))) {
-      _offset++;
+    var offset = start;
+    while (offset < length && !isLonTokenDelimiter(source.codeUnitAt(offset))) {
+      offset++;
     }
-    if (start == _offset) {
+    _offset = offset;
+    if (start == offset) {
       _fail('Expected a LON token');
     }
-    return source.substring(start, _offset);
+    return source.substring(start, offset);
   }
 
   bool _skipWhitespace() {
+    final source = this.source;
+    final length = source.length;
     final start = _offset;
-    while (!_isAtEnd && isLonWhitespace(source.codeUnitAt(_offset))) {
-      _offset++;
+    var offset = start;
+    while (offset < length && isLonWhitespace(source.codeUnitAt(offset))) {
+      offset++;
     }
-    return _offset != start;
+    _offset = offset;
+    return offset != start;
   }
 
   bool _consumeIf(int code) {

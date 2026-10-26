@@ -113,58 +113,69 @@ final class JsonTextParser {
   }
 
   JsonNumberNode _parseNumber() {
+    final source = this.source;
+    final length = source.length;
     final start = _offset;
+    var offset = start;
 
-    _consumeIf(0x2D);
-    if (_isAtEnd) {
+    if (offset < length && source.codeUnitAt(offset) == 0x2D) {
+      offset++;
+    }
+    if (offset >= length) {
+      _offset = offset;
       _fail('Incomplete JSON number');
     }
 
-    final first = source.codeUnitAt(_offset);
+    final first = source.codeUnitAt(offset);
     if (first == 0x30) {
-      _offset++;
-      if (!_isAtEnd && _isDigit(source.codeUnitAt(_offset))) {
+      offset++;
+      if (offset < length && _isDigit(source.codeUnitAt(offset))) {
+        _offset = offset;
         _fail('Leading zeroes are not allowed in JSON numbers');
       }
     } else if (first >= 0x31 && first <= 0x39) {
-      _offset++;
-      while (!_isAtEnd && _isDigit(source.codeUnitAt(_offset))) {
-        _offset++;
+      offset++;
+      while (offset < length && _isDigit(source.codeUnitAt(offset))) {
+        offset++;
       }
     } else {
+      _offset = offset;
       _fail('Expected a digit in JSON number');
     }
 
-    if (!_isAtEnd && source.codeUnitAt(_offset) == 0x2E) {
-      _offset++;
-      if (_isAtEnd || !_isDigit(source.codeUnitAt(_offset))) {
+    if (offset < length && source.codeUnitAt(offset) == 0x2E) {
+      offset++;
+      if (offset >= length || !_isDigit(source.codeUnitAt(offset))) {
+        _offset = offset;
         _fail('Expected a digit after the decimal point');
       }
-      while (!_isAtEnd && _isDigit(source.codeUnitAt(_offset))) {
-        _offset++;
+      while (offset < length && _isDigit(source.codeUnitAt(offset))) {
+        offset++;
       }
     }
 
-    if (!_isAtEnd) {
-      final exponent = source.codeUnitAt(_offset);
+    if (offset < length) {
+      final exponent = source.codeUnitAt(offset);
       if (exponent == 0x65 || exponent == 0x45) {
-        _offset++;
-        if (!_isAtEnd) {
-          final sign = source.codeUnitAt(_offset);
+        offset++;
+        if (offset < length) {
+          final sign = source.codeUnitAt(offset);
           if (sign == 0x2B || sign == 0x2D) {
-            _offset++;
+            offset++;
           }
         }
-        if (_isAtEnd || !_isDigit(source.codeUnitAt(_offset))) {
+        if (offset >= length || !_isDigit(source.codeUnitAt(offset))) {
+          _offset = offset;
           _fail('Expected an exponent digit');
         }
-        while (!_isAtEnd && _isDigit(source.codeUnitAt(_offset))) {
-          _offset++;
+        while (offset < length && _isDigit(source.codeUnitAt(offset))) {
+          offset++;
         }
       }
     }
 
-    return JsonNumberNode(source.substring(start, _offset));
+    _offset = offset;
+    return JsonNumberNode(source.substring(start, offset));
   }
 
   String parseString() {
@@ -174,13 +185,17 @@ final class JsonTextParser {
   }
 
   void _skipWhitespace() {
-    while (!_isAtEnd) {
-      final code = source.codeUnitAt(_offset);
+    final source = this.source;
+    final length = source.length;
+    var offset = _offset;
+    while (offset < length) {
+      final code = source.codeUnitAt(offset);
       if (code != 0x20 && code != 0x09 && code != 0x0A && code != 0x0D) {
-        return;
+        break;
       }
-      _offset++;
+      offset++;
     }
+    _offset = offset;
   }
 
   bool _consumeIf(int code) {

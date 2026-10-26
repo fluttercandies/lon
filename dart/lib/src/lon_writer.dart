@@ -5,19 +5,32 @@ import 'lon_syntax.dart';
 final class LonWriter {
   const LonWriter({
     this.useTables = true,
+    this.pretty = false,
     required this.maxOutputCodeUnits,
   });
 
   final bool useTables;
+
+  /// Renders containers across lines, indented two spaces per nesting
+  /// depth: every object member, table row, and container-array element
+  /// occupies its own line between the container's brackets. Table rows and
+  /// scalar arrays stay inline. The output decodes to exactly the same value
+  /// as the single-line form.
+  final bool pretty;
   final int maxOutputCodeUnits;
 
   String write(JsonNode node) {
     final buffer = CodeUnitLimitedStringBuffer(maxOutputCodeUnits);
-    _writeValue(buffer, node);
+    _writeValue(buffer, node, 0, false);
     return buffer.toString();
   }
 
-  void _writeValue(StringSink buffer, JsonNode node) {
+  void _writeValue(
+    StringSink buffer,
+    JsonNode node,
+    int depth,
+    bool inline,
+  ) {
     switch (node) {
       case JsonNullNode():
         buffer.write('null');
@@ -28,61 +41,107 @@ final class LonWriter {
       case JsonStringNode(:final value):
         _writeString(buffer, value);
       case JsonArrayNode():
-        if (useTables && _writeRecordTable(buffer, node)) {
+        if (useTables && _writeRecordTable(buffer, node, depth, inline)) {
           return;
         }
-        _writeArray(buffer, node);
+        _writeArray(buffer, node, depth, inline);
       case JsonObjectNode():
-        _writeObject(buffer, node);
+        _writeObject(buffer, node, depth, inline);
     }
   }
 
-  void _writeArray(StringSink buffer, JsonArrayNode node) {
+  void _writeArray(
+    StringSink buffer,
+    JsonArrayNode node,
+    int depth,
+    bool inline,
+  ) {
     buffer.writeCharCode(0x5B);
-    var useSpaces = node.values.isNotEmpty;
+    var allBareStrings = node.values.isNotEmpty;
     for (final value in node.values) {
       if (value is JsonStringNode && canUseBareLonString(value.value)) {
         continue;
       }
-      useSpaces = false;
+      allBareStrings = false;
       break;
     }
-    for (var index = 0; index < node.values.length; index++) {
-      if (index != 0) {
-        buffer.writeCharCode(useSpaces ? 0x20 : 0x2C);
+    if (allBareStrings) {
+      // Space-separated bare strings; the scan already validated every
+      // element, so values are written without revalidation.
+      for (var index = 0; index < node.values.length; index++) {
+        if (index != 0) {
+          buffer.writeCharCode(0x20);
+        }
+        buffer.write((node.values[index] as JsonStringNode).value);
       }
-      _writeValue(buffer, node.values[index]);
+      buffer.writeCharCode(0x5D);
+      return;
+    }
+
+    final multiline = pretty && !inline && node.values.any(_isContainer);
+    for (var index = 0; index < node.values.length; index++) {
+      if (multiline) {
+        _writeLineBreak(buffer, depth + 1);
+      } else if (index != 0) {
+        buffer.writeCharCode(0x2C);
+      }
+      _writeValue(buffer, node.values[index], depth + 1, inline);
+      if (multiline && index != node.values.length - 1) {
+        buffer.writeCharCode(0x2C);
+      }
+    }
+    if (multiline) {
+      _writeLineBreak(buffer, depth);
     }
     buffer.writeCharCode(0x5D);
   }
 
-  void _writeObject(StringSink buffer, JsonObjectNode node) {
+  void _writeObject(
+    StringSink buffer,
+    JsonObjectNode node,
+    int depth,
+    bool inline,
+  ) {
     buffer.writeCharCode(0x7B);
+    final multiline = pretty && !inline && node.members.isNotEmpty;
     for (var index = 0; index < node.members.length; index++) {
-      if (index != 0) {
+      if (multiline) {
+        _writeLineBreak(buffer, depth + 1);
+      } else if (index != 0) {
         buffer.writeCharCode(0x20);
       }
       final member = node.members[index];
       _writeKey(buffer, member.key);
       buffer.writeCharCode(0x3A);
-      _writeValue(buffer, member.value);
+      if (multiline) {
+        buffer.writeCharCode(0x20);
+      }
+      _writeValue(buffer, member.value, depth + 1, inline);
+    }
+    if (multiline) {
+      _writeLineBreak(buffer, depth);
     }
     buffer.writeCharCode(0x7D);
   }
 
-  bool _writeRecordTable(StringSink buffer, JsonArrayNode node) {
+  bool _writeRecordTable(
+    StringSink buffer,
+    JsonArrayNode node,
+    int depth,
+    bool inline,
+  ) {
     if (node.values.length < 2) {
       return false;
     }
+    final rows = <JsonObjectNode>[];
     for (final value in node.values) {
       if (value is! JsonObjectNode) {
         return false;
       }
+      rows.add(value);
     }
 
-    final schema = _RecordSchema.infer(
-      node.values.cast<JsonObjectNode>(),
-    );
+    final schema = _RecordSchema.infer(rows);
     if (schema == null ||
         schema.fields.isEmpty ||
         schema.valueCount < 2 ||
@@ -91,10 +150,23 @@ final class LonWriter {
     }
 
     buffer.writeCharCode(0x5B);
+    if (pretty && !inline) {
+      _writeLineBreak(buffer, depth + 1);
+      _writeSchema(buffer, schema);
+      for (var index = 0; index < rows.length; index++) {
+        buffer.writeCharCode(0x3B);
+        _writeLineBreak(buffer, depth + 1);
+        _writeRow(buffer, schema, rows[index], depth + 1);
+      }
+      _writeLineBreak(buffer, depth);
+      buffer.writeCharCode(0x5D);
+      return true;
+    }
+
     _writeSchema(buffer, schema);
-    for (final value in node.values.cast<JsonObjectNode>()) {
+    for (final value in rows) {
       buffer.writeCharCode(0x3B);
-      _writeRow(buffer, schema, value);
+      _writeRow(buffer, schema, value, depth + 1);
     }
     buffer.writeCharCode(0x5D);
     return true;
@@ -132,14 +204,18 @@ final class LonWriter {
     StringSink buffer,
     _RecordSchema schema,
     JsonObjectNode value,
+    int depth,
   ) {
-    _writeRowValues(buffer, schema, value, false);
+    _writeRowValues(buffer, schema, value, depth, false);
   }
 
+  // Row cells always render inline: a table row stays on one line even when
+  // a cell holds a nested table or object.
   bool _writeRowValues(
     StringSink buffer,
     _RecordSchema schema,
     JsonObjectNode value,
+    int depth,
     bool hasValue,
   ) {
     for (var index = 0; index < schema.fields.length; index++) {
@@ -150,18 +226,26 @@ final class LonWriter {
         if (hasValue) {
           buffer.writeCharCode(0x20);
         }
-        _writeValue(buffer, memberValue);
+        _writeValue(buffer, memberValue, depth, true);
         hasValue = true;
       } else {
         hasValue = _writeRowValues(
           buffer,
           nested,
           memberValue as JsonObjectNode,
+          depth,
           hasValue,
         );
       }
     }
     return hasValue;
+  }
+
+  void _writeLineBreak(StringSink buffer, int depth) {
+    buffer.writeCharCode(0x0A);
+    for (var index = 0; index < depth; index++) {
+      buffer.write('  ');
+    }
   }
 
   void _writeString(StringSink buffer, String value) {
@@ -180,6 +264,9 @@ final class LonWriter {
     }
   }
 }
+
+bool _isContainer(JsonNode node) =>
+    node is JsonArrayNode || node is JsonObjectNode;
 
 int _lonKeyByteLength(String value) =>
     canUseBareLonKey(value) ? utf8Length(value) : jsonStringUtf8Length(value);
@@ -228,8 +315,7 @@ final class _RecordSchema {
     this.valueCount,
   );
 
-  static _RecordSchema? infer(Iterable<JsonObjectNode> values) =>
-      _infer(values.toList(growable: false));
+  static _RecordSchema? infer(List<JsonObjectNode> values) => _infer(values);
 
   static _RecordSchema? _infer(List<JsonObjectNode> values) {
     if (values.isEmpty) {

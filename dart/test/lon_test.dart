@@ -5,7 +5,7 @@ import 'package:lon/lon.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final cases = (jsonDecode(File('conformance/v1.json').readAsStringSync())
+  final cases = (jsonDecode(File('../conformance/v1.json').readAsStringSync())
           as List<Object?>)
       .cast<Map<String, Object?>>();
 
@@ -273,6 +273,155 @@ void main() {
     });
   });
 
+  group('pretty rendering', () {
+    const prettyCodec = LonCodec(pretty: true);
+
+    test('renders objects, tables, and container arrays across lines', () {
+      expect(
+        jsonToLon(
+          '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Bob"},'
+          '{"id":3,"name":"Lin"}],"meta":{"count":3,"tags":["x","y"]},'
+          '"empty":{},"scalars":[1,2,3]}',
+          pretty: true,
+        ),
+        '{\n'
+        '  users: [\n'
+        '    id name;\n'
+        '    1 Ada;\n'
+        '    2 Bob;\n'
+        '    3 Lin\n'
+        '  ]\n'
+        '  meta: {\n'
+        '    count: 3\n'
+        '    tags: [x,"y"]\n'
+        '  }\n'
+        '  empty: {}\n'
+        '  scalars: [1,2,3]\n'
+        '}',
+      );
+    });
+
+    test('indents nested containers by depth', () {
+      expect(
+        jsonToLon(
+          '{"outer":{"rows":[{"id":1,"items":[{"sku":"x","qty":2},'
+          '{"sku":"y","qty":1}]}],"leaf":{"a":{"b":1}}},'
+          '"mix":[1,{"a":"b"},[{"c":"d"}]]}',
+          pretty: true,
+        ),
+        '{\n'
+        '  outer: {\n'
+        '    rows: [\n'
+        '      {\n'
+        '        id: 1\n'
+        '        items: [\n'
+        '          sku qty;\n'
+        '          x 2;\n'
+        '          "y" 1\n'
+        '        ]\n'
+        '      }\n'
+        '    ]\n'
+        '    leaf: {\n'
+        '      a: {\n'
+        '        b: 1\n'
+        '      }\n'
+        '    }\n'
+        '  }\n'
+        '  mix: [\n'
+        '    1,\n'
+        '    {\n'
+        '      a: b\n'
+        '    },\n'
+        '    [\n'
+        '      {\n'
+        '        c: d\n'
+        '      }\n'
+        '    ]\n'
+        '  ]\n'
+        '}',
+      );
+    });
+
+    test('keeps table cells inline even when they hold containers', () {
+      expect(
+        jsonToLon(
+          '{"orders":[{"id":"A1","customer":{"id":1,"name":"Ada"},'
+          '"items":[{"sku":"X","qty":2},{"sku":"Y","qty":1}]},'
+          '{"id":"A2","customer":{"id":2,"name":"Bob"},"items":[]}]}',
+          pretty: true,
+        ),
+        '{\n'
+        '  orders: [\n'
+        '    id customer{id name} items;\n'
+        '    A1 1 Ada [sku qty;X 2;"Y" 1];\n'
+        '    A2 2 Bob []\n'
+        '  ]\n'
+        '}',
+      );
+    });
+
+    test('scalar roots stay compact', () {
+      expect(jsonToLon('42', pretty: true), '42');
+      expect(jsonToLon('"Ada"', pretty: true), 'Ada');
+      expect(jsonToLon('[1,2,3]', pretty: true), '[1,2,3]');
+      expect(jsonToLon('["a","b"]', pretty: true), '[a b]');
+      expect(jsonToLon('{}', pretty: true), '{}');
+      expect(jsonToLon('[]', pretty: true), '[]');
+    });
+
+    test('decodes to the same values as the compact form', () {
+      const source =
+          '{"users":[{"id":1,"name":"Ada","meta":{"x":true,"y":null}},'
+          '{"id":2,"name":"Bob","meta":{"x":false,"y":1}}],"mix":[1,{"a":"b"},'
+          '[{"c":"d"}]]}';
+      final compact = jsonToLon(source);
+      final pretty = prettyCodec.encodeJson(source);
+
+      expect(lonToJson(pretty), lonToJson(compact));
+      expect(jsonToLon(lonToJson(pretty)), compact);
+      expect(
+        jsonDecode(prettyCodec.decodeJson(compact)),
+        jsonDecode(lonToJson(compact)),
+      );
+      expect(
+        prettyCodec.decodeJson('{users:[id name;1 Ada;2 Bob]}'),
+        '{\n'
+        '  "users": [\n'
+        '    {\n'
+        '      "id": 1,\n'
+        '      "name": "Ada"\n'
+        '    },\n'
+        '    {\n'
+        '      "id": 2,\n'
+        '      "name": "Bob"\n'
+        '    }\n'
+        '  ]\n'
+        '}',
+      );
+    });
+
+    test('pretty re-encodes to identical canonical output', () {
+      const source = '{"a":{"b":{"c":[1,{"d":"e"}]}},"r":[{"x":1,"y":{"z":2}},'
+          '{"x":3,"y":{"z":4}}]}';
+      final canonical = jsonToLon(source);
+      final pretty = jsonToLon(source, pretty: true);
+      expect(jsonToLon(lonToJson(pretty)), canonical);
+    });
+
+    test('line endings contain no trailing whitespace', () {
+      final pretty = jsonToLon(
+        '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Bob"}],'
+        '"o":{"a":[1,{"b":2}]}}',
+        pretty: true,
+      );
+      for (final line in pretty.split('\n')) {
+        expect(line.endsWith(' '), isFalse, reason: line);
+        expect(line.endsWith('\t'), isFalse, reason: line);
+      }
+      expect(pretty, isNot(endsWith('\n')));
+    });
+  });
+
   group('CLI', () {
     test('round-trips split UTF-8 byte streams', () async {
       final value = <String, Object?>{
@@ -330,6 +479,58 @@ void main() {
       expect(diagnostic, contains('Invalid input'));
       expect(diagnostic, isNot(contains('\uFFFD')));
     });
+    test('encodes and decodes with --pretty', () async {
+      final process = await Process.start(
+        Platform.resolvedExecutable,
+        <String>['run', 'bin/lon.dart', 'encode', '--pretty'],
+      );
+      final stdoutFuture = process.stdout.transform(utf8.decoder).join();
+      final stderrFuture = process.stderr.transform(utf8.decoder).join();
+      process.stdin.write(
+        '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Bob"}]}',
+      );
+      await process.stdin.close();
+
+      expect(await process.exitCode, 0);
+      expect(await stderrFuture, isEmpty);
+      final encoded = (await stdoutFuture).trimRight();
+      expect(
+        encoded,
+        '{\n'
+        '  users: [\n'
+        '    id name;\n'
+        '    1 Ada;\n'
+        '    2 Bob\n'
+        '  ]\n'
+        '}',
+      );
+
+      final decode = await Process.start(
+        Platform.resolvedExecutable,
+        <String>['run', 'bin/lon.dart', 'decode', '--pretty'],
+      );
+      final decodeOut = decode.stdout.transform(utf8.decoder).join();
+      decode.stdin.write(encoded);
+      await decode.stdin.close();
+
+      expect(await decode.exitCode, 0);
+      expect(
+        jsonDecode(await decodeOut),
+        jsonDecode(
+          '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Bob"}]}',
+        ),
+      );
+    });
+
+    test('rejects unknown flags with exit code 64', () async {
+      final process = await Process.start(
+        Platform.resolvedExecutable,
+        <String>['run', 'bin/lon.dart', 'encode', '--bogus'],
+      );
+      await process.stdin.close();
+      expect(await process.exitCode, 64);
+    });
+
     test('does not echo untrusted input in diagnostics', () async {
       final process = await Process.start(
         Platform.resolvedExecutable,

@@ -1,6 +1,5 @@
 .dart_tool/
 .idea/
-.third/
 .packages
 .pub/
 build/
@@ -8,3 +7,4 @@ coverage/
 benchmark/node_modules/
 pubspec.lock
 .DS_Store
+rust/target/

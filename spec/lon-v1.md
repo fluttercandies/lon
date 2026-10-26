@@ -59,6 +59,8 @@ This is exactly `[1,{"a":"b"},{"a":[1,{"b":"c"}]}]`. Commas make heterogeneous b
 
 Empty containers remain `{}` and `[]`. Object member order and duplicate keys are retained by text-to-text conversion.
 
+Whitespace between tokens may be any LON whitespace, including line breaks. Canonical output is always a single line. A multi-line rendering is a permitted non-canonical display form: each object member, table row, and element of a container-valued array occupies its own line, indented two spaces per nesting depth, with the container's `]` or `}` on its own line aligned to the container's depth; table rows, scalar arrays, and empty containers stay on one line, and commas terminate all but the last line of a container-valued array. It decodes to the identical value and re-encodes to the identical canonical document.
+
 ## Self-describing record tables
 
 A table removes record keys only when at least two array records have exactly the same ordered top-level field names and the recursively flattened schema contains at least two leaf-value fields. Uniform nested objects are recursively factored into the schema. One-value records, keyed objects, and arrays containing a varying or mixed-shape object cell stay in ordinary explicit form; the encoder does not trade immediate type ownership for a marginal saving.
