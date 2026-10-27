@@ -64,7 +64,7 @@ jobs:
           version="${RELEASE_TAG#rust-v}"
           asset="lon-${version}-${{ matrix.target }}.tar.gz"
           tar -czf "$asset" -C "target/${{ matrix.target }}/release" lon
-          sha256sum "$asset" > "$asset.sha256"
+          shasum -a 256 "$asset" > "$asset.sha256"
 
       - name: Upload release assets
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
