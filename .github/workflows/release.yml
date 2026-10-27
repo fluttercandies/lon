@@ -1,0 +1,75 @@
+name: Release
+
+# Builds the Rust CLI binaries for each supported platform and attaches them
+# to the GitHub Release of the pushed `rust-v*` tag. `workflow_dispatch`
+# back-fills a release for an existing tag (for example the first release,
+# rust-v0.1.0, which was tagged before this workflow existed).
+on:
+  push:
+    tags:
+      - 'rust-v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing rust-v* tag to release'
+        required: true
+
+permissions: {}
+
+jobs:
+  binaries:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            os: macos-14
+          - target: x86_64-apple-darwin
+            os: macos-14
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: rust
+
+    steps:
+      - name: Check out tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install musl tools
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - name: Build
+        run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Package
+        run: |
+          version="${RELEASE_TAG#rust-v}"
+          asset="lon-${version}-${{ matrix.target }}.tar.gz"
+          tar -czf "$asset" -C "target/${{ matrix.target }}/release" lon
+          sha256sum "$asset" > "$asset.sha256"
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          files: |
+            rust/lon-*.tar.gz
+            rust/lon-*.tar.gz.sha256
